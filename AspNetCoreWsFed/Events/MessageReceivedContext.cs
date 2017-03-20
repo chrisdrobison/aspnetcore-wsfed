@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Authentication;
 
 namespace AspNetCoreWsFed.Events
 {
@@ -9,7 +8,5 @@ namespace AspNetCoreWsFed.Events
             : base(context, options)
         {
         }
-
-        public AuthenticationProperties Properties { get; set; }
     }
 }

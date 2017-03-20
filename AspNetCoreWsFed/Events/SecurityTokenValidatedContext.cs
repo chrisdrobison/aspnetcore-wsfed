@@ -9,10 +9,5 @@ namespace AspNetCoreWsFed.Events
             : base(context, options)
         {
         }
-
-        /// <summary>
-        ///     Gets or set the <see cref="AuthenticationTicket" />
-        /// </summary>
-        public AuthenticationTicket AuthenticationTicket { get; set; }
     }
 }

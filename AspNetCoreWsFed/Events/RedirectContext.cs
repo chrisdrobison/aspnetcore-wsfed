@@ -9,6 +9,6 @@ namespace AspNetCoreWsFed
         {
         }
 
-        public AuthenticationProperties Properties { get; }
+        public AuthenticationProperties Properties { get; set; }
     }
 }

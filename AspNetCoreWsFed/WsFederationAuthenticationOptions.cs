@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.IdentityModel.Protocols;
 
 namespace AspNetCoreWsFed
@@ -8,7 +10,6 @@ namespace AspNetCoreWsFed
     public class WsFederationAuthenticationOptions : RemoteAuthenticationOptions
     {
         private SecurityTokenHandlerCollection _securityTokenHandlers;
-        private TokenValidationParameters _tokenValidationParameters;
 
         /// <summary>
         /// Initializes a new <see cref="WsFederationAuthenticationOptions"/>
@@ -26,10 +27,10 @@ namespace AspNetCoreWsFed
         {
             AuthenticationScheme = authenticationScheme;
             DisplayName = WsFederationAuthenticationDefaults.Caption;
-            _tokenValidationParameters = new TokenValidationParameters();
             BackchannelTimeout = TimeSpan.FromMinutes(1);
             UseTokenLifetime = true;
             RefreshOnIssuerKeyNotFound = true;
+            Events = new WsFederationEvents();
         }
 
         /// <summary>
@@ -61,5 +62,49 @@ namespace AspNetCoreWsFed
         /// recovery in the event of a signature key rollover. This is enabled by default.
         /// </summary>
         public bool RefreshOnIssuerKeyNotFound { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="IWsFederationEvents"/> to call when processing WsFederation messages.
+        /// </summary>
+        public new IWsFederationEvents Events { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="SecurityTokenHandlerCollection"/> of <see cref="SecurityTokenHandler"/>s used to read and validate <see cref="SecurityToken"/>s.
+        /// </summary>
+        public SecurityTokenHandlerCollection SecurityTokenHandlers
+        {
+            get { return _securityTokenHandlers; }
+            set
+            {
+                _securityTokenHandlers = value ?? throw new ArgumentNullException("SecurityTokenHandlers");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the type used to secure data handled by the middleware.
+        /// </summary>
+        public ISecureDataFormat<AuthenticationProperties> StateDataFormat { get; set; }
+
+        /// <summary>
+        /// Gets or sets the parameters used to validate identity tokens.
+        /// </summary>
+        /// <remarks>Contains the types and definitions required for validating a token.</remarks>
+        public TokenValidationParameters TokenValidationParameters { get; set; } = new TokenValidationParameters();
+
+        /// <summary>
+        /// Gets or sets the 'wreply'.
+        /// </summary>
+        public string Wreply { get; set; }
+
+        /// <summary>
+        /// Gets or sets the 'wreply' value used during sign-out.
+        /// If none is specified then the value from the Wreply field is used.
+        /// </summary>
+        public string SignOutWreply { get; set; }
+
+        /// <summary>
+        /// Gets or sets the 'wtrealm'.
+        /// </summary>
+        public string Wtrealm { get; set; }
     }
 }
