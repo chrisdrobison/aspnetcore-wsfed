@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
-namespace AspNetCoreWsFed.Events
+namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation.Events
 {
     public class SecurityTokenValidatedContext : BaseWsFederationContext
     {

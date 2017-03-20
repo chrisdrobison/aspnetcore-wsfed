@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Authentication;
 
-namespace AspNetCoreWsFed
+namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
 {
     public class RedirectContext : BaseWsFederationContext
     {

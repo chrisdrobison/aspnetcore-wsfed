@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
 
 </Project>

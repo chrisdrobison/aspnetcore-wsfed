@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 
-namespace AspNetCoreWsFed
+namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
 {
     public class AuthenticationFailedContext : BaseWsFederationContext
     {

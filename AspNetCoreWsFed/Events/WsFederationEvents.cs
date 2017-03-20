@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using AspNetCoreWsFed.Events;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Contrib.Authentication.WsFederation.Events;
 
-namespace AspNetCoreWsFed
+namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
 {
     /// <summary>
     /// Specifies events which the <see cref="WsFederationAuthenticationMiddleware"></see> invokes to enable developer control over the authentication process. />

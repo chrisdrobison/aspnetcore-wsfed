@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace AspNetCoreWsFed.Events
+namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation.Events
 {
     public class SecurityTokenContext : BaseWsFederationContext
     {

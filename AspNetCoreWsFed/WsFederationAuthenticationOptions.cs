@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IdentityModel.Tokens;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.IdentityModel.Protocols;
 
-namespace AspNetCoreWsFed
+namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
 {
     public class WsFederationAuthenticationOptions : RemoteAuthenticationOptions
     {
@@ -32,6 +34,17 @@ namespace AspNetCoreWsFed
             RefreshOnIssuerKeyNotFound = true;
             Events = new WsFederationEvents();
         }
+
+        /// <summary>
+        /// Gets or sets the a pinned certificate validator to use to validate the endpoints used
+        /// when retrieving metadata.
+        /// </summary>
+        /// <value>
+        /// The pinned certificate validator.
+        /// </value>
+        /// <remarks>If this property is null then the default certificate checks are performed,
+        /// validating the subject name and if the signing chain is a trusted party.</remarks>
+        public Func<object, X509Certificate, X509Chain, SslPolicyErrors, bool> BackchannelCertificateValidator { get; set; }
 
         /// <summary>
         /// Configuration provided directly by the developer. If provided, then MetadataAddress and the Backchannel properties

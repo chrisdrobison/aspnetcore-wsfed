@@ -1,4 +1,4 @@
-﻿namespace AspNetCoreWsFed
+﻿namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
 {
     /// <summary>
     ///     Default values related to WsFederation authentication middleware

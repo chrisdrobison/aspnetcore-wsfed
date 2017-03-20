@@ -5,20 +5,18 @@ using System.IO;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
-using AspNetCoreWsFed.Events;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Contrib.Authentication.WsFederation.Events;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Extensions;
 using Microsoft.IdentityModel.Protocols;
 
-namespace AspNetCoreWsFed
+namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
 {
     public class WsFederationAuthenticationHandler : RemoteAuthenticationHandler<WsFederationAuthenticationOptions>
     {
-        private const string HandledResponse = "HandledResponse";
-
         private readonly ILogger _logger;
         private WsFederationConfiguration _configuration;
 
@@ -35,7 +33,9 @@ namespace AspNetCoreWsFed
         {
             // Allow login to be constrained to a specific path.
             if (Options.CallbackPath.HasValue && Options.CallbackPath != Request.PathBase + Request.Path)
+            {
                 return null;
+            }
 
             WsFederationMessage wsFederationMessage = null;
 
@@ -65,7 +65,9 @@ namespace AspNetCoreWsFed
             }
 
             if (wsFederationMessage == null || !wsFederationMessage.IsSignInMessage)
+            {
                 return null;
+            }
 
             ExceptionDispatchInfo authFailedEx = null;
             try
@@ -73,7 +75,9 @@ namespace AspNetCoreWsFed
                 var messageReceivedContext = await RunMessageReceivedEventAsync(wsFederationMessage);
                 AuthenticateResult result;
                 if (messageReceivedContext.CheckEventResult(out result))
+                {
                     return result;
+                }
 
                 if (wsFederationMessage.Wresult == null)
                 {
@@ -90,10 +94,14 @@ namespace AspNetCoreWsFed
 
                 var securityTokenContext = await RunSecurityTokenReceivedEventAsync(wsFederationMessage);
                 if (securityTokenContext.CheckEventResult(out result))
+                {
                     return result;
+                }
 
                 if (_configuration == null)
+                {
                     _configuration = await Options.ConfigurationManager.GetConfigurationAsync(Context.RequestAborted);
+                }
 
                 // Copy and augment to avoid cross request race conditions for updated configurations.
                 var tvp = Options.TokenValidationParameters.Clone();
@@ -117,10 +125,14 @@ namespace AspNetCoreWsFed
                     // Override any session persistence to match the token lifetime.
                     var issued = parsedToken.ValidFrom;
                     if (issued != DateTime.MinValue)
+                    {
                         ticket.Properties.IssuedUtc = issued.ToUniversalTime();
+                    }
                     var expires = parsedToken.ValidTo;
                     if (expires != DateTime.MinValue)
+                    {
                         ticket.Properties.ExpiresUtc = expires.ToUniversalTime();
+                    }
                     ticket.Properties.AllowRefresh = false;
                 }
 
@@ -142,13 +154,17 @@ namespace AspNetCoreWsFed
                 // Refresh the configuration for exceptions that may be caused by key rollovers. The user can also request a refresh in the notification.
                 if (Options.RefreshOnIssuerKeyNotFound &&
                     authFailedEx.SourceException.GetType() == typeof(SecurityTokenSignatureKeyNotFoundException))
+                {
                     Options.ConfigurationManager.RequestRefresh();
+                }
 
                 var authenticationFailedNotification = await RunAuthenticationFailedEventAsync(wsFederationMessage,
                     authFailedEx.SourceException);
                 AuthenticateResult result;
                 if (authenticationFailedNotification.CheckEventResult(out result))
+                {
                     return result;
+                }
 
                 authFailedEx.Throw();
             }
@@ -166,12 +182,16 @@ namespace AspNetCoreWsFed
         protected override async Task<bool> HandleUnauthorizedAsync(ChallengeContext context)
         {
             if (context == null)
+            {
                 throw new ArgumentNullException(nameof(context));
+            }
 
             Logger.LogTrace($"Entering {nameof(WsFederationAuthenticationHandler)}'s HandleUnauthorizedAsync");
 
             if (_configuration == null)
+            {
                 _configuration = await Options.ConfigurationManager.GetConfigurationAsync(Context.RequestAborted);
+            }
 
             var baseUri =
                 Request.Scheme +
@@ -186,7 +206,9 @@ namespace AspNetCoreWsFed
 
             var properties = new AuthenticationProperties(context.Properties);
             if (string.IsNullOrEmpty(properties.RedirectUri))
+            {
                 properties.RedirectUri = currentUri;
+            }
 
             var wsFederationMessage = new WsFederationMessage
             {
@@ -198,7 +220,9 @@ namespace AspNetCoreWsFed
             };
 
             if (!string.IsNullOrWhiteSpace(Options.Wreply))
+            {
                 wsFederationMessage.Wreply = Options.Wreply;
+            }
 
             var redirectContext = new RedirectContext(Context, Options)
             {
@@ -220,13 +244,15 @@ namespace AspNetCoreWsFed
 
             var redirectUri = redirectContext.ProtocolMessage.CreateSignInUrl();
             if (!Uri.IsWellFormedUriString(redirectUri, UriKind.Absolute))
+            {
                 Logger.LogWarning($"The sign-in redirect URI is malformed: {redirectUri}");
+            }
             Response.Redirect(redirectUri);
             return true;
         }
 
         /// <summary>
-        /// Handles signout
+        ///     Handles signout
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
@@ -244,11 +270,11 @@ namespace AspNetCoreWsFed
                 _configuration = await Options.ConfigurationManager.GetConfigurationAsync(Context.RequestAborted);
             }
 
-            var wsFederationMessage = new WsFederationMessage()
+            var wsFederationMessage = new WsFederationMessage
             {
                 IssuerAddress = _configuration.TokenEndpoint ?? string.Empty,
                 Wtrealm = Options.Wtrealm,
-                Wa = WsFederationActions.SignOut,
+                Wa = WsFederationActions.SignOut
             };
 
             var properties = new AuthenticationProperties(context.Properties);
@@ -275,7 +301,7 @@ namespace AspNetCoreWsFed
                 Logger.LogDebug("RedirectContext.HandledResponse");
                 return;
             }
-            else if (redirectContext.Skipped)
+            if (redirectContext.Skipped)
             {
                 Logger.LogDebug("RedirectContext.Skipped");
                 return;
@@ -283,7 +309,9 @@ namespace AspNetCoreWsFed
 
             var redirectUri = redirectContext.ProtocolMessage.CreateSignOutUrl();
             if (!Uri.IsWellFormedUriString(redirectUri, UriKind.Absolute))
+            {
                 Logger.LogWarning($"The sign-out redirect URI is malformed: {redirectUri}");
+            }
             Response.Redirect(redirectUri);
         }
 
@@ -313,9 +341,13 @@ namespace AspNetCoreWsFed
 
             await Options.Events.MessageReceived(messageReceivedContext);
             if (messageReceivedContext.HandledResponse)
+            {
                 Logger.LogDebug("MessageReceivedContext.HandledResponse");
+            }
             else if (messageReceivedContext.Skipped)
+            {
                 Logger.LogDebug("MessageReceivedContext.Skipped");
+            }
 
             return messageReceivedContext;
         }
@@ -330,9 +362,13 @@ namespace AspNetCoreWsFed
 
             await Options.Events.SecurityTokenReceived(securityTokenContext);
             if (securityTokenContext.HandledResponse)
+            {
                 Logger.LogDebug("SecurityTokenContext.HandledResponse");
+            }
             else if (securityTokenContext.Skipped)
+            {
                 Logger.LogDebug("SecurityTokenContext.HandledResponse");
+            }
 
             return securityTokenContext;
         }
@@ -350,9 +386,13 @@ namespace AspNetCoreWsFed
 
             await Options.Events.SecurityTokenValidated(securityTokenValidateContext);
             if (securityTokenValidateContext.HandledResponse)
+            {
                 Logger.LogDebug("SecurityTokenValidatedContext.HandledResponse");
+            }
             else if (securityTokenValidateContext.Skipped)
+            {
                 Logger.LogDebug("SecurityTokenValidatedContext.Skipped");
+            }
 
             return securityTokenValidateContext;
         }
@@ -369,9 +409,13 @@ namespace AspNetCoreWsFed
 
             await Options.Events.AuthenticationFailed(authenticationFailedContext);
             if (authenticationFailedContext.HandledResponse)
+            {
                 Logger.LogDebug("AuthenticationFailedContext.HandledResponse");
+            }
             else if (authenticationFailedContext.Skipped)
+            {
                 Logger.LogDebug("AuthenticationFailedContext.Skipped");
+            }
 
             return authenticationFailedContext;
         }
@@ -383,13 +427,17 @@ namespace AspNetCoreWsFed
             var textLength = text.Length;
             var equalIndex = text.IndexOf('=');
             if (equalIndex == -1)
+            {
                 equalIndex = textLength;
+            }
             var scanIndex = 0;
             while (scanIndex < textLength)
             {
                 var delimiterIndex = text.IndexOfAny(delimiters, scanIndex);
                 if (delimiterIndex == -1)
+                {
                     delimiterIndex = textLength;
+                }
                 if (equalIndex < delimiterIndex)
                 {
                     while (scanIndex != equalIndex && char.IsWhiteSpace(text[scanIndex]))
@@ -402,13 +450,19 @@ namespace AspNetCoreWsFed
 
                     List<string> existing;
                     if (!accumulator.TryGetValue(name, out existing))
+                    {
                         accumulator.Add(name, new List<string>(1) {value});
+                    }
                     else
+                    {
                         existing.Add(value);
+                    }
 
                     equalIndex = text.IndexOf('=', delimiterIndex);
                     if (equalIndex == -1)
+                    {
                         equalIndex = textLength;
+                    }
                 }
                 scanIndex = delimiterIndex + 1;
             }
