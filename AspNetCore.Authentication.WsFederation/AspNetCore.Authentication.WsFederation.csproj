@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
+    <Authors>chrisdrobison</Authors>
+    <Company />
+    <Description>A port of the Katana WsFederation middleware for ASP.NET Core.</Description>
+    <PackageLicenseUrl>https://github.com/chrisdrobison/aspnetcore-wsfed/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/chrisdrobison/aspnetcore-wsfed</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/chrisdrobison/aspnetcore-wsfed</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
