@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using AspNetCore.Authentication.WsFederation;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,13 @@ namespace Sample.Controllers
             }
 
             return Challenge(new AuthenticationProperties {RedirectUri = "/"},
+                WsFederationAuthenticationDefaults.AuthenticationType);
+        }
+
+        public IActionResult Logout()
+        {
+            return SignOut(new AuthenticationProperties {RedirectUri = "http://localhost:8550/" },
+                CookieAuthenticationDefaults.AuthenticationScheme,
                 WsFederationAuthenticationDefaults.AuthenticationType);
         }
     }
