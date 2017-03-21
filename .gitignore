@@ -215,3 +215,7 @@ FakesAssemblies/
 **/*.Server/GeneratedArtifacts
 **/*.Server/ModelManifest.xml
 _Pvt_Extensions
+
+Sample/wwwroot/lib/
+Sample/wwwroot/js/site.min.js
+Sample/wwwroot/css/site.min.css

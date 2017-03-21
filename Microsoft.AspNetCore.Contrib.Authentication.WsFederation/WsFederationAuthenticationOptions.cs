@@ -4,6 +4,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.IdentityModel.Protocols;
 
@@ -27,7 +28,9 @@ namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
         /// <param name="authenticationScheme"> corresponds to the IIdentity AuthenticationType property. <see cref="AuthenticationOptions.AuthenticationScheme"/>.</param>
         public WsFederationAuthenticationOptions(string authenticationScheme)
         {
+            AutomaticAuthenticate = true;
             AuthenticationScheme = authenticationScheme;
+            CallbackPath = new PathString("/signin-wsfed");
             DisplayName = WsFederationAuthenticationDefaults.Caption;
             BackchannelTimeout = TimeSpan.FromMinutes(1);
             UseTokenLifetime = true;

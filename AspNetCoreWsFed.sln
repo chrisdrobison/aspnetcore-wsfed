@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNetCore.Contrib.Authentication.WsFederation", "Microsoft.AspNetCore.Contrib.Authentication.WsFederation\Microsoft.AspNetCore.Contrib.Authentication.WsFederation.csproj", "{6FF4993E-7DE4-4B05-B314-8CDE49E67373}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{C0CA1680-E8BC-4523-85AF-4F96A0CD0D98}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6FF4993E-7DE4-4B05-B314-8CDE49E67373}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FF4993E-7DE4-4B05-B314-8CDE49E67373}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FF4993E-7DE4-4B05-B314-8CDE49E67373}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0CA1680-E8BC-4523-85AF-4F96A0CD0D98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0CA1680-E8BC-4523-85AF-4F96A0CD0D98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0CA1680-E8BC-4523-85AF-4F96A0CD0D98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0CA1680-E8BC-4523-85AF-4F96A0CD0D98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

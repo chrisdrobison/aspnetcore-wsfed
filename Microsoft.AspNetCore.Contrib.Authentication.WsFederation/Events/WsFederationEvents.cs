@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Contrib.Authentication.WsFederation.Events;
 
@@ -12,41 +13,42 @@ namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
         /// <summary>
         /// Invoked if exceptions are thrown during request processing. The exceptions will be re-thrown after this event unless suppressed.
         /// </summary>
-        public Task AuthenticationFailed(AuthenticationFailedContext context)
-        {
-            return Task.FromResult(0);
-        }
+        public Func<AuthenticationFailedContext, Task> OnAuthenticationFailed { get; set; } =
+            context => TaskCache.CompletedTask;
 
         /// <summary>
         /// Invoked when a protocol message is first received.
         /// </summary>
-        public Task MessageReceived(MessageReceivedContext context)
-        {
-            return Task.FromResult(0);
-        }
+        public Func<MessageReceivedContext, Task> OnMessageReceived { get; set; } = 
+            context => TaskCache.CompletedTask;
 
         /// <summary>
         /// Invoked to manipulate redirects to the identity provider for SignIn, SignOut, or Challenge.
         /// </summary>
-        public Task RedirectToIdentityProvider(RedirectContext context)
-        {
-            return Task.FromResult(0);
-        }
+        public Func<RedirectContext, Task> OnRedirectToIdentityProvider { get; set; } =
+            context => TaskCache.CompletedTask;
 
         /// <summary>
         /// Invoked with the security token that has been extracted from the protocol message.
         /// </summary>
-        public Task SecurityTokenReceived(SecurityTokenContext context)
-        {
-            return Task.FromResult(0);
-        }
+        public Func<SecurityTokenContext, Task> OnSecurityTokenReceived { get; set; } =
+            context => TaskCache.CompletedTask;
 
         /// <summary>
         /// Invoked after the security token has passed validation and a ClaimsIdentity has been generated.
         /// </summary>
-        public Task SecurityTokenValidated(SecurityTokenValidatedContext context)
-        {
-            return Task.FromResult(0);
-        }
+        public Func<SecurityTokenValidatedContext, Task> OnSecurityTokenValidated { get; set; } =
+            context => TaskCache.CompletedTask;
+
+
+        public virtual Task AuthenticationFailed(AuthenticationFailedContext context) => OnAuthenticationFailed(context);
+
+        public virtual Task MessageReceived(MessageReceivedContext context) => OnMessageReceived(context);
+
+        public Task RedirectToIdentityProvider(RedirectContext context) => OnRedirectToIdentityProvider(context);
+
+        public Task SecurityTokenReceived(SecurityTokenContext context) => OnSecurityTokenReceived(context);
+
+        public Task SecurityTokenValidated(SecurityTokenValidatedContext context) => OnSecurityTokenValidated(context);
     }
 }

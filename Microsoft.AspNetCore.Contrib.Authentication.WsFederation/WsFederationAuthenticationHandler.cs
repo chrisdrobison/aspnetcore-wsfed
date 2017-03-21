@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.IO;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Contrib.Authentication.WsFederation.Events;
@@ -69,7 +68,6 @@ namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
                 return null;
             }
 
-            ExceptionDispatchInfo authFailedEx = null;
             try
             {
                 var messageReceivedContext = await RunMessageReceivedEventAsync(wsFederationMessage);
@@ -138,38 +136,27 @@ namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
 
                 var securityTokenValidatedNotification = await RunSecurityTokenValidatedEventAsync(wsFederationMessage,
                     ticket);
-                securityTokenValidatedNotification.CheckEventResult(out result);
-                return result;
+                return securityTokenValidatedNotification.CheckEventResult(out result)
+                    ? result
+                    : AuthenticateResult.Success(ticket);
             }
             catch (Exception exception)
             {
-                // We can't await inside a catch block, capture and handle outside.
-                authFailedEx = ExceptionDispatchInfo.Capture(exception);
-            }
-
-            if (authFailedEx != null)
-            {
-                _logger.LogError("Exception occurred while processing message: ", authFailedEx.SourceException);
+                _logger.LogError("Exception occurred while processing message: ", exception);
 
                 // Refresh the configuration for exceptions that may be caused by key rollovers. The user can also request a refresh in the notification.
                 if (Options.RefreshOnIssuerKeyNotFound &&
-                    authFailedEx.SourceException.GetType() == typeof(SecurityTokenSignatureKeyNotFoundException))
+                    exception.GetType() == typeof(SecurityTokenSignatureKeyNotFoundException))
                 {
                     Options.ConfigurationManager.RequestRefresh();
                 }
 
                 var authenticationFailedNotification = await RunAuthenticationFailedEventAsync(wsFederationMessage,
-                    authFailedEx.SourceException);
-                AuthenticateResult result;
-                if (authenticationFailedNotification.CheckEventResult(out result))
-                {
-                    return result;
-                }
-
-                authFailedEx.Throw();
+                    exception);
+                return authenticationFailedNotification.CheckEventResult(out AuthenticateResult result)
+                    ? result
+                    : AuthenticateResult.Fail(exception);
             }
-
-            return null;
         }
 
         /// <summary>
