@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Contrib.Authentication.WsFederation;
+using AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
 

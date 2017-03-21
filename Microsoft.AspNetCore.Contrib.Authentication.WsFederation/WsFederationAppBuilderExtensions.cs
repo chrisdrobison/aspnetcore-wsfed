@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.AspNetCore.Contrib.Authentication.WsFederation;
+using AspNetCore.Authentication.WsFederation;
 using Microsoft.Extensions.Options;
 
 namespace Microsoft.AspNetCore.Builder

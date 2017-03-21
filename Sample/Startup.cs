@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using AspNetCore.Authentication.WsFederation;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Contrib.Authentication.WsFederation;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

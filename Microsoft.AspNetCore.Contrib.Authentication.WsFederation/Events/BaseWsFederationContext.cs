@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols;
 
-namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
+namespace AspNetCore.Authentication.WsFederation
 {
     public class BaseWsFederationContext : BaseControlContext
     {

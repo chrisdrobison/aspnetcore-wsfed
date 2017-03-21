@@ -5,14 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Contrib.Authentication.WsFederation.Events;
+using AspNetCore.Authentication.WsFederation.Events;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Extensions;
 using Microsoft.IdentityModel.Protocols;
 
-namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
+namespace AspNetCore.Authentication.WsFederation
 {
     public class WsFederationAuthenticationHandler : RemoteAuthenticationHandler<WsFederationAuthenticationOptions>
     {

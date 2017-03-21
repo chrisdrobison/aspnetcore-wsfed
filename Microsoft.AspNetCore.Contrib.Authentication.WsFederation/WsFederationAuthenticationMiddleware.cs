@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Extensions;
 using Microsoft.IdentityModel.Protocols;
 
-namespace Microsoft.AspNetCore.Contrib.Authentication.WsFederation
+namespace AspNetCore.Authentication.WsFederation
 {
     public class WsFederationAuthenticationMiddleware : AuthenticationMiddleware<WsFederationAuthenticationOptions>
     {
