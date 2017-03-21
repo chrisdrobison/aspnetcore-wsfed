@@ -24,7 +24,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.AspNetCore.Contrib.Authentication.WsFederation\AspNetCore.Authentication.WsFederation.csproj" />
+    <ProjectReference Include="..\AspNetCore.Authentication.WsFederation\AspNetCore.Authentication.WsFederation.csproj" />
   </ItemGroup>
 
 </Project>
