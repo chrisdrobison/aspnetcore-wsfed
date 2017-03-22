@@ -8,6 +8,7 @@
     <PackageLicenseUrl>https://github.com/chrisdrobison/aspnetcore-wsfed/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/chrisdrobison/aspnetcore-wsfed</PackageProjectUrl>
     <RepositoryUrl>https://github.com/chrisdrobison/aspnetcore-wsfed</RepositoryUrl>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
