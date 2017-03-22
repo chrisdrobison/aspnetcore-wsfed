@@ -203,7 +203,8 @@ namespace AspNetCore.Authentication.WsFederation
                 Wtrealm = Options.Wtrealm,
                 Wctx =
                     $"{WsFederationAuthenticationDefaults.WctxKey}={Uri.EscapeDataString(Options.StateDataFormat.Protect(properties))}",
-                Wa = WsFederationActions.SignIn
+                Wa = WsFederationActions.SignIn,
+                Wreply = BuildWreply(Options.CallbackPath)
             };
 
             if (!string.IsNullOrWhiteSpace(Options.Wreply))
@@ -405,6 +406,11 @@ namespace AspNetCore.Authentication.WsFederation
             }
 
             return authenticationFailedContext;
+        }
+
+        private string BuildWreply(string targetPath)
+        {
+            return Request.Scheme + "://" + Request.Host + OriginalPathBase + targetPath;
         }
 
         private static IDictionary<string, List<string>> ParseDelimited(string text)
