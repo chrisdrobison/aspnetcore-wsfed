@@ -47,7 +47,11 @@ namespace Sample
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions());
+            app.UseCookieAuthentication(new CookieAuthenticationOptions()
+            {
+                AutomaticChallenge = true,
+                ReturnUrlParameter = "source"
+            });
 
             app.UseWsFederationAuthentication(new WsFederationAuthenticationOptions
             {
