@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sample.Controllers
 {
@@ -26,7 +27,7 @@ namespace Sample.Controllers
 
             return View();
         }
-
+        [Authorize]
         public IActionResult Claims()
         {
             return View();
