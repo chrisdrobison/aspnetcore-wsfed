@@ -11,20 +11,20 @@ namespace Sample.Controllers
     public class AccountController : Controller
     {
         // GET: /<controller>/
-        public IActionResult Login()
+        public IActionResult Login(string source = "/")
         {
             if (User.Identities.Any(identity => identity.IsAuthenticated))
             {
-                return Redirect("/");
+                return Redirect(source);
             }
 
-            return Challenge(new AuthenticationProperties {RedirectUri = "/"},
+            return Challenge(new AuthenticationProperties { RedirectUri = source },
                 WsFederationAuthenticationDefaults.AuthenticationType);
         }
 
         public IActionResult Logout()
         {
-            return SignOut(new AuthenticationProperties {RedirectUri = "http://localhost:8550/" },
+            return SignOut(new AuthenticationProperties { RedirectUri = "http://localhost:8550/" },
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 WsFederationAuthenticationDefaults.AuthenticationType);
         }
