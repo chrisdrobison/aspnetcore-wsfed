@@ -33,12 +33,8 @@ namespace AspNetCore.Authentication.WsFederation
             // Allow login to be constrained to a specific path.
             if (Options.CallbackPath.HasValue && Options.CallbackPath != Request.PathBase + Request.Path)
             {
-                if (Options.SkipUnrecognizedRequests)
-                {
-                    // Not for us?
-                    return AuthenticateResult.Skip();
-                }
-                return AuthenticateResult.Fail("Not for us");
+                // Not for us.
+                return AuthenticateResult.Skip();
             }
 
             WsFederationMessage wsFederationMessage = null;
