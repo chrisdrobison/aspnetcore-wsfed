@@ -108,6 +108,12 @@ namespace AspNetCore.Authentication.WsFederation
         public TokenValidationParameters TokenValidationParameters { get; set; } = new TokenValidationParameters();
 
         /// <summary>
+        /// Indicates if requests to the CallbackPath may also be for other components.
+        /// This is disabled by default.
+        /// </summary>
+        public bool SkipUnrecognizedRequests { get; set; } = false;
+        
+        /// <summary>
         /// Gets or sets the 'wreply'.
         /// </summary>
         public string Wreply { get; set; }

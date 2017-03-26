@@ -33,7 +33,8 @@ namespace AspNetCore.Authentication.WsFederation
             // Allow login to be constrained to a specific path.
             if (Options.CallbackPath.HasValue && Options.CallbackPath != Request.PathBase + Request.Path)
             {
-                return null;
+                // Not for us.
+                return AuthenticateResult.Skip();
             }
 
             WsFederationMessage wsFederationMessage = null;
@@ -65,7 +66,12 @@ namespace AspNetCore.Authentication.WsFederation
 
             if (wsFederationMessage == null || !wsFederationMessage.IsSignInMessage)
             {
-                return null;
+                if (Options.SkipUnrecognizedRequests)
+                {
+                    // Not for us?
+                    return AuthenticateResult.Skip();
+                }
+                return AuthenticateResult.Fail("No message");
             }
 
             try
@@ -79,15 +85,13 @@ namespace AspNetCore.Authentication.WsFederation
 
                 if (wsFederationMessage.Wresult == null)
                 {
-                    _logger.LogWarning("Received a sign-in message without a WResult.");
-                    return null;
+                    return AuthenticateResult.Fail("Received a sign-in message without a WResult.");
                 }
 
                 var token = wsFederationMessage.GetToken();
                 if (string.IsNullOrWhiteSpace(token))
                 {
-                    _logger.LogWarning("Received a sign-in message without a token.");
-                    return null;
+                    return AuthenticateResult.Fail("Received a sign-in message without a token.");
                 }
 
                 var securityTokenContext = await RunSecurityTokenReceivedEventAsync(wsFederationMessage);
