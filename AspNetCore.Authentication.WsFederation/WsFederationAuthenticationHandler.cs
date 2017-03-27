@@ -31,7 +31,7 @@ namespace AspNetCore.Authentication.WsFederation
         protected override async Task<AuthenticateResult> HandleRemoteAuthenticateAsync()
         {
             // Allow login to be constrained to a specific path.
-            if (Options.CallbackPath.HasValue && Options.CallbackPath != Request.PathBase + Request.Path)
+            if (Options.CallbackPath.HasValue && !Options.CallbackPath.Equals(Request.PathBase + Request.Path, StringComparison.OrdinalIgnoreCase))
             {
                 // Not for us.
                 return AuthenticateResult.Skip();
