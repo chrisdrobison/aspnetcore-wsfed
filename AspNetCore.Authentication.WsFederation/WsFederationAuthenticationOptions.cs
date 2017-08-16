@@ -128,5 +128,11 @@ namespace AspNetCore.Authentication.WsFederation
         /// Gets or sets the 'wtrealm'.
         /// </summary>
         public string Wtrealm { get; set; }
+
+        /// <summary>
+        /// Save the bootstrap token as a claim in the ClaimPrincipal object during authentication.
+        /// If none (the default) or empty then the token is not saved.
+        /// </summary>
+        public string BootStrapTokenClaimName { get; set; }
     }
 }

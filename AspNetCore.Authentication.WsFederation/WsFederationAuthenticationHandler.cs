@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.AspNetCore.Authentication;
 using AspNetCore.Authentication.WsFederation.Events;
 using Microsoft.AspNetCore.Http.Authentication;
@@ -114,6 +117,22 @@ namespace AspNetCore.Authentication.WsFederation
 
                 SecurityToken parsedToken;
                 var principal = Options.SecurityTokenHandlers.ValidateToken(token, tvp, out parsedToken);
+
+                if (!string.IsNullOrEmpty(Options.BootStrapTokenClaimName) && parsedToken != null)
+                {
+                    ClaimsIdentity identity = principal.Identity as ClaimsIdentity;
+                    if (identity != null)
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        var writer = XmlWriter.Create(new StringWriter(sb), new XmlWriterSettings
+                        {
+                            OmitXmlDeclaration = true
+                        });
+                        Options.SecurityTokenHandlers[parsedToken].WriteToken(writer, parsedToken);
+                        writer.Flush();
+                        identity.AddClaim(new Claim(Options.BootStrapTokenClaimName, Convert.ToBase64String(Encoding.UTF8.GetBytes(sb.ToString()))));
+                    }
+                }
 
                 // Retrieve our cached redirect uri
                 var state = wsFederationMessage.Wctx;
